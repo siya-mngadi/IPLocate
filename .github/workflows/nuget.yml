@@ -1,33 +1,50 @@
-name: Publish NuGet package
+name: Publish NuGet Package
 
 on:
   push:
     tags:
-      - "v*.*.*"
+      - "v*.*.*" # Trigger on tags like v0.1.0, v0.2.1, etc.
 
 jobs:
-  publish:
+  build-test-and-publish:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # 1️⃣ Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
 
+      # 2️⃣ Setup .NET SDK
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: "8.0.x" # Your target .NET version
 
-      - name: Restore
+      # 3️⃣ Restore dependencies
+      - name: Restore dependencies
         run: dotnet restore
 
+      # 4️⃣ Build the project
       - name: Build
-        run: dotnet build -c Release --no-restore
+        run: dotnet build --configuration Release --no-restore
 
+      # 5️⃣ Run tests
+      - name: Test
+        run: dotnet test --configuration Release --no-build --verbosity normal
+
+      # 6️⃣ Pack the NuGet package
       - name: Pack
-        run: dotnet pack -c Release --no-build --output ./nupkg
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          dotnet pack --configuration Release --no-build --output ./nupkg /p:PackageVersion=$VERSION
 
-      - name: Push to NuGet
-        run: dotnet nuget push ./nupkg/*.nupkg \
-          --api-key ${{ secrets.NUGET_API_KEY }} \
-          --source https://api.nuget.org/v3/index.json \
-          --skip-duplicate
+      # 7️⃣ Publish to NuGet.org
+      - name: Publish
+        run: |
+          for pkg in ./nupkg/*.nupkg; do
+            echo "Pushing $pkg to NuGet.org..."
+            dotnet nuget push "$pkg" \
+              --api-key ${{ secrets.NUGET_API_KEY }} \
+              --source https://api.nuget.org/v3/index.json \
+              --skip-duplicate
+          done
