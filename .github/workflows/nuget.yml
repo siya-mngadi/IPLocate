@@ -35,7 +35,7 @@ jobs:
       # 6️⃣ Pack the NuGet package
       - name: Pack
         run: |
-          VERSION=${GITHUB_REF#refs/tags/}
+          VERSION=${GITHUB_REF#refs/tags/v}
           dotnet pack --configuration Release --no-build --output ./nupkg /p:PackageVersion=$VERSION
 
       # 7️⃣ Publish to NuGet.org
