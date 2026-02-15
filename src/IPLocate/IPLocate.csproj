@@ -5,7 +5,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
 
-    <PackageId>IPLocate</PackageId>
+    <PackageId>IPLocateIO.Client</PackageId>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Version>0.1.0</Version>
     <Authors>Siyabonga Mngadi</Authors>
