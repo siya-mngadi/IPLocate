@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/IPLocate/IPLocate.csproj" />
+  <Project Path="tests/IPLocate.UnitTests/IPLocateTests.csproj" />
+</Solution>
