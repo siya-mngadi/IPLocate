@@ -11,7 +11,6 @@ namespace IPLocateTests
 	public class IPLocateClientTests : IDisposable
 	{
 		private readonly WireMockServer _server;
-
 		public IPLocateClientTests()
 		{
 			_server = WireMockServer.Start(8010);
@@ -162,7 +161,7 @@ namespace IPLocateTests
 			var client = IPLocateClientFactory.Client(apiKey, GetTestApiBaseUrl());
 
 			var ex = await Assert.ThrowsAsync<IPLocateServiceException>(async() => await client.LookupAsync(ip));
-			ex.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
+			ex.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
 			ex.Message.Should().Contain("Internal server error");
 		}
 

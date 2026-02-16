@@ -5,7 +5,7 @@ namespace IPLocate.Exceptions
 	public class IPLocateInvalidIPException : IPLocateApiException
 	{
 		public IPLocateInvalidIPException(string message)
-			: base(message, (int)HttpStatusCode.BadRequest)
+			: base(message, HttpStatusCode.BadRequest)
 		{
 		}
 	}

@@ -11,8 +11,6 @@ namespace IpLocate
 	public sealed class IPLocateClient
 	{
 		private readonly HttpClient _client;
-
-		private const int TooManyRequests = 429;
 		public IPLocateClient(HttpClient client)
 		{
 			_client = client;
@@ -56,25 +54,25 @@ namespace IpLocate
 					}
 					catch (JsonException ex)
 					{
-						throw new IPLocateServiceException("Failed to parse IPLocate API response: " + ex.Message, (int)response.StatusCode, ex);
+						throw new IPLocateServiceException("Failed to parse IPLocate API response: " + ex.Message, response.StatusCode, ex);
 					}
 				}
 				else
 				{
 					await HandleErrorResponse(response);
 					// Should not be reached as handleErrorResponse is always thrown
-					throw new IPLocateServiceException("Unexpected state after error handling.", (int)response.StatusCode);
+					throw new IPLocateServiceException("Unexpected state after error handling.", response.StatusCode);
 				}
 			}
 			catch (HttpRequestException ex)
 			{
-				throw new IPLocateServiceException($"Network error or problem reaching IPLocate API: {ex.Message}", (int)HttpStatusCode.ServiceUnavailable, ex);
+				throw new IPLocateServiceException($"Network error or problem reaching IPLocate API: {ex.Message}", HttpStatusCode.ServiceUnavailable, ex);
 			}
 		}
 
 		private async Task HandleErrorResponse(HttpResponseMessage response)
 		{
-			var statusCode = (int)response.StatusCode;
+			var statusCode = response.StatusCode;
 			string errorBodyString;
 
 			try
@@ -94,7 +92,7 @@ namespace IpLocate
 				errorBodyString = "No error body received from server. Status code: " + statusCode;
 			}
 
-			if (statusCode >= (int)HttpStatusCode.BadRequest && statusCode < (int)HttpStatusCode.InternalServerError)
+			if (statusCode >= HttpStatusCode.BadRequest && statusCode < HttpStatusCode.InternalServerError)
 			{
 				var responseBody = await response.Content.ReadAsStringAsync();
 				try
@@ -102,31 +100,31 @@ namespace IpLocate
 					var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseBody);
 					var errorMessage = errorResponse?.Error ?? "Unknown error";
 
-					switch (statusCode)
+					throw statusCode switch
 					{
-						case TooManyRequests: throw new IPLocateRateLimitException(errorMessage);
-						case (int)HttpStatusCode.BadRequest: throw new IPLocateInvalidIPException(errorMessage);
-						case (int)HttpStatusCode.NotFound: throw new IPLocateNotFoundException(errorMessage);
-						case (int)HttpStatusCode.Forbidden: throw new IPLocateApiKeyException(errorMessage);
-						default: throw new IPLocateApiException($"API error: {errorMessage}", statusCode);
-					}
+						HttpStatusCode.TooManyRequests => new IPLocateRateLimitException(errorMessage),
+						HttpStatusCode.BadRequest => new IPLocateInvalidIPException(errorMessage),
+						HttpStatusCode.NotFound => new IPLocateNotFoundException(errorMessage),
+						HttpStatusCode.Forbidden => new IPLocateApiKeyException(errorMessage),
+						_ => new IPLocateApiException($"API error: {errorMessage}", statusCode),
+					};
 				}
 				catch (JsonException)
 				{
 					string baseMessage = "API request failed with status code " + statusCode +
 										  ". Unable to parse error response. Raw error: " + errorBodyString;
-					switch(statusCode)
+					throw statusCode switch
 					{
-						case TooManyRequests: throw new IPLocateRateLimitException(baseMessage);
-						case (int)HttpStatusCode.BadRequest: throw new IPLocateInvalidIPException(baseMessage);
-						case (int)HttpStatusCode.NotFound: throw new IPLocateNotFoundException(baseMessage);
-						case (int)HttpStatusCode.Forbidden: throw new IPLocateApiKeyException(baseMessage);
-						default: throw new IPLocateApiException($"API error: {baseMessage}", statusCode);
-					}
+						HttpStatusCode.TooManyRequests => new IPLocateRateLimitException(baseMessage),
+						HttpStatusCode.BadRequest => new IPLocateInvalidIPException(baseMessage),
+						HttpStatusCode.NotFound => new IPLocateNotFoundException(baseMessage),
+						HttpStatusCode.Forbidden => new IPLocateApiKeyException(baseMessage),
+						_ => new IPLocateApiException($"API error: {baseMessage}", statusCode),
+					};
 				}
 				throw new IPLocateServiceException($"Authentication failed with status code {statusCode}. Response body: {errorBodyString}", statusCode);
 			}
-			else if (statusCode >= (int)HttpStatusCode.InternalServerError)
+			else if (statusCode >= HttpStatusCode.InternalServerError)
 			{
 				throw new IPLocateServiceException($"Server error: {errorBodyString}",statusCode);
 			}

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 
 namespace IPLocate.cache
 {
 	public class CachedHttpResponse
 	{
-		public int StatusCode { get; set; }
+		public HttpStatusCode StatusCode { get; set; }
 		public byte[] Content { get; set; }
 		public string Version { get; set; }
 		public string ReasonPhrase { get; set; }

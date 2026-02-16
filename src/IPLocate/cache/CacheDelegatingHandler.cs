@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,8 +9,7 @@ namespace IPLocate.cache
 {
 	public class CacheDelegatingHandler : DelegatingHandler
 	{
-		private readonly ConcurrentDictionary<string, (DateTime expiry, CachedHttpResponse response)> _cache 
-			= new ConcurrentDictionary<string, (DateTime expiry, CachedHttpResponse response)>(StringComparer.Ordinal);
+		private readonly ConcurrentDictionary<string, (DateTime expiry, CachedHttpResponse response)> _cache = new ConcurrentDictionary<string, (DateTime expiry, CachedHttpResponse response)>(StringComparer.Ordinal);
 		private readonly TimeSpan _expirationDuration;
 
 		public CacheDelegatingHandler(TimeSpan expirationDuration)
@@ -52,7 +50,7 @@ namespace IPLocate.cache
 
 		private HttpResponseMessage CreateResponseMessage(CachedHttpResponse original, HttpRequestMessage request)
 		{
-			var response = new HttpResponseMessage((HttpStatusCode)original.StatusCode)
+			var response = new HttpResponseMessage(original.StatusCode)
 			{
 				RequestMessage = request,
 				ReasonPhrase = original.ReasonPhrase,
@@ -82,7 +80,7 @@ namespace IPLocate.cache
 			return new CachedHttpResponse
 			{
 				Version = response.Version.ToString(),
-				StatusCode = (int)response.StatusCode,
+				StatusCode = response.StatusCode,
 				ReasonPhrase = response.ReasonPhrase,
 				Headers = response.Headers.ToDictionary(h => h.Key, h => h.Value),
 				ContentHeaders = response.Content?.Headers
