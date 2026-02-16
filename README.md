@@ -24,7 +24,7 @@ You can make 1,000 free requests per day with a [free account](https://iplocate.
 ### .NET CLI
 
 ```cmd
-dotnet add package IPLocate
+dotnet add package IPLocateIO.Client
 ```
 
 ## Authentication
