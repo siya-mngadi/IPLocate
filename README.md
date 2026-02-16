@@ -19,12 +19,35 @@ See what information we can provide for [your IP address](https://iplocate.io/wh
 
 You can make 1,000 free requests per day with a [free account](https://iplocate.io/signup). For higher plans, check out [API pricing](https://www.iplocate.io/pricing).
 
+## Requirements
+
+- ✅ .NET 6.0+
+- ✅ .NET 7.0
+- ✅ .NET 8.0
+- ✅ .NET Standard 2.1
+- API Key from [IPLocate.io](https://iplocate.io/signup)
+
+> [!NOTE]
+> ❌ Not compatible with .NET Framework (which only supports .NET Standard 2.0)
+
 ## Installation
 
-### .NET CLI
+### Using .NET CLI
 
-```cmd
+```bash
 dotnet add package IPLocateIO.Client
+```
+
+### Using NuGet Package Manager
+
+```bash
+NuGet\Install-Package IPLocateIO.Client
+```
+
+### Using Paket CLI
+
+```bash
+paket add IPLocateIO.Client
 ```
 
 ## Authentication
