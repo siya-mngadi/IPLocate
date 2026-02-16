@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-[![NuGet](https://img.shields.io/nuget/v/IPLocate.svg?style=flat-square)](https://www.nuget.org/packages/IPLocate/)
+[![NuGet](https://img.shields.io/nuget/v/IPLocateIO.Client.svg?style=flat-square)](https://www.nuget.org/packages/IPLocateIO.Client/)
 
 A C# client for the [IPLocate.io](https://iplocate.io) geolocation API. Look up detailed geolocation and threat intelligence data for any IP address:
 
@@ -57,6 +57,39 @@ services.AddHttpClient<IPLocateClient>((sp, http) =>
 	http.DefaultRequestHeaders.Add("Accept", "application/json");
 	http.DefaultRequestHeaders.Add("User-Agent", "IPLocateClient/1.0.0");
 });
+```
+
+## Caching
+
+### Quick start
+
+```csharp
+using IPLocate;
+
+var client = IPLocateClientFactory.Client(apiKey:"YOUR_API_KEY", cacheDuration: TimeSpan.FromSeconds(15));
+var result = await client.LookupCurrentIpAsync();
+
+Console.WriteLine($"IP: {result.Ip}, Country: {result.Country}");
+```
+
+### Dependency Injection
+
+```csharp
+public static void AddIPLocateClient(this IServiceCollection services)
+{
+	services.AddHttpClient<IPLocateClient>((sp, http) =>
+	{
+		var opts = sp.GetRequiredService<IOptions<MyApiOptions>>();
+		http.BaseAddress = new Uri(opts.Value.BaseUrl);
+		http.DefaultRequestHeaders.Add("X-Api-Key", opts.Value.ApiKey);
+		http.DefaultRequestHeaders.Add("Accept", "application/json");
+		http.DefaultRequestHeaders.Add("User-Agent", "IPLocateClient/1.0.0");
+	}).AddHttpMessageHandler((sp) =>
+	{
+		var opts = sp.GetRequiredService<IOptions<MyApiOptions>>();
+		return new CacheDelegatingHandler(opts.Value.cacheDuration);
+	});
+}
 ```
 
 ## API reference
