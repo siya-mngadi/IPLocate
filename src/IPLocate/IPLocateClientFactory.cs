@@ -12,7 +12,7 @@ namespace IPLocate
 
 		private const string HEADER_ACCEPT = "Accept";
 		private const string HEADER_USER_AGENT = "User-Agent";
-		private const string HEADER_API_KEY = "apikey";
+		private const string HEADER_API_KEY = "X-API-Key";
 		private const string CONTENT_TYPE_JSON = "application/json";
 		private const string DEFAULT_USER_AGENT = "IPLocateClient-OkHttp/1.0";
 

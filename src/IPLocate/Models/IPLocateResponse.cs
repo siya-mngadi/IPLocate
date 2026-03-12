@@ -5,7 +5,7 @@ namespace IPLocate.Models
 	public class IPLocateResponse
 	{
 		[JsonProperty("ip")]
-		public string Ip { get; set;  }
+		public string Ip { get; set; }
 		[JsonProperty("country")]
 		public string Country { get; set; }
 		[JsonProperty("country_code")]
@@ -23,15 +23,17 @@ namespace IPLocate.Models
 		[JsonProperty("time_zone")]
 		public string TimeZone { get; set; }
 		[JsonProperty("postal_code")]
-		 public string PostalCode { get; set; }
+		public string PostalCode { get; set; }
 		[JsonProperty("subdivision")]
 		public string Subdivision { get; set; }
 		[JsonProperty("currency_code")]
 		public string CurrencyCode { get; set; }
-		[JsonProperty("calling_code")]	
+		[JsonProperty("calling_code")]
 		public string CallingCode { get; set; }
-		[JsonProperty("network")]
-		public string Network { get; set; }
+		[JsonProperty("is_anycast")]
+		public bool IsAnycast { get; set; }
+		[JsonProperty("is_satellite")]
+		public bool IsSatellite { get; set; }
 
 		public AsnDetails Asn { get; set; }
 		public PrivacyDetails Privacy { get; set; }
