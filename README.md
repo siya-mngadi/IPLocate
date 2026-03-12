@@ -4,6 +4,8 @@
 
 [![NuGet](https://img.shields.io/nuget/v/IPLocateIO.Client.svg?style=flat-square)](https://www.nuget.org/packages/IPLocateIO.Client/)
 
+![NuGet Downloads](https://img.shields.io/nuget/dt/IPLocateIO.Client)
+
 A C# client for the [IPLocate.io](https://iplocate.io) geolocation API. Look up detailed geolocation and threat intelligence data for any IP address:
 
 - **IP geolocation**: IP to country, IP to city, IP to region/state, coordinates, timezone, postal code
@@ -52,7 +54,7 @@ paket add IPLocateIO.Client
 
 ## Authentication
 
-Get your free API key from [IPLocate.io](https://iplocate.io/signup), and pass it to the `IpLocateClientFactory.Client` method:
+Get your free API key from [IPLocate.io](https://iplocate.io/signup), and pass it to the `IPLocateClientFactory.Client` method:
 
 ```csharp
 IPLocateClient client = IPLocateClientFactory.Client("YOUR_API_KEY");
