@@ -83,9 +83,9 @@ namespace IpLocate
 		/// <returns>A dictionary where each key is an IP address and the value is a tuple containing the location response and any
 		/// associated error information.</returns>
 		/// <exception cref="ArgumentException">Thrown if <paramref name="ipList"/> is null or empty.</exception>
-		public async Task<Dictionary<string, (IPLocateResponse result, ErrorResponse error)>> BatchLookupAsync(IEnumerable<string> ipList)
+		public async Task<Dictionary<string, (IPLocateResponse Result, ErrorResponse Error)>> BatchLookupAsync(IEnumerable<string> ipList)
 		{
-			var dict = new Dictionary<string, (IPLocateResponse result, ErrorResponse error)>();
+			var dict = new Dictionary<string, (IPLocateResponse Result, ErrorResponse Error)>();
 			if (ipList is null || !ipList.Any())
 			{
 				throw new ArgumentException("IP address batch cannot be null or empty", nameof(ipList));

@@ -12,6 +12,8 @@ namespace IPLocateTests
 	public class IPLocateClientTests : IDisposable
 	{
 		private readonly WireMockServer _server;
+
+		private readonly string HEADER_API_KEY = "X-API-Key";
 		public IPLocateClientTests()
 		{
 			_server = WireMockServer.Start(8010);
@@ -44,7 +46,7 @@ namespace IPLocateTests
 			_server.Given(
 				Request.Create()
 					.WithPath($"/api/lookup/{ip}")
-					.WithHeader("apikey", apiKey)
+					.WithHeader(HEADER_API_KEY, apiKey)
 					.UsingGet()
 			)
 			.RespondWith(
@@ -80,7 +82,7 @@ namespace IPLocateTests
 			_server.Given(
 				Request.Create()
 					.WithPath($"/api/lookup")
-					.WithHeader("apikey", apiKey)
+					.WithHeader(HEADER_API_KEY, apiKey)
 					.UsingGet()
 			)
 			.RespondWith(
@@ -106,7 +108,7 @@ namespace IPLocateTests
 			_server.Given(
 				Request.Create()
 					.WithPath($"/api/lookup/{ip}")
-					.WithHeader("apikey", apiKey)
+					.WithHeader(HEADER_API_KEY, apiKey)
 					.UsingGet()
 			)
 			.RespondWith(
@@ -128,7 +130,7 @@ namespace IPLocateTests
 			_server.Given(
 				Request.Create()
 					.WithPath($"/api/lookup/{ip}")
-					.WithHeader("apikey", apiKey)
+					.WithHeader(HEADER_API_KEY, apiKey)
 					.UsingGet()
 			)
 			.RespondWith(
@@ -150,7 +152,7 @@ namespace IPLocateTests
 			_server.Given(
 				Request.Create()
 					.WithPath($"/api/lookup/{ip}")
-					.WithHeader("apikey", apiKey)
+					.WithHeader(HEADER_API_KEY, apiKey)
 					.UsingGet()
 			)
 			.RespondWith(
@@ -195,7 +197,7 @@ namespace IPLocateTests
 			_server.Given(
 				Request.Create()
 					.WithPath($"/api/batch")
-					.WithHeader("apikey", apiKey)
+					.WithHeader(HEADER_API_KEY, apiKey)
 					.UsingPost()
 					.WithBodyAsJson(ipList)
 			)
@@ -215,25 +217,25 @@ namespace IPLocateTests
 			// 8.8.8.8
 			var Ip1 = response["8.8.8.8"];
 			Ip1.Should().NotBeNull();
-			Ip1.error.Should().BeNull();
-			Ip1.result.Should().NotBeNull();
-			Ip1.result.Country.Should().Be("Ireland");
-			Ip1.result.CountryCode.Should().Be("IE");
+			Ip1.Error.Should().BeNull();
+			Ip1.Result.Should().NotBeNull();
+			Ip1.Result.Country.Should().Be("Ireland");
+			Ip1.Result.CountryCode.Should().Be("IE");
 
 			// 1.1.1.1
 			var Ip2 = response["1.1.1.1"];
 			Ip2.Should().NotBeNull();
-			Ip2.error.Should().BeNull();
-			Ip2.result.Should().NotBeNull();
-			Ip2.result.Country.Should().Be("United Kingdom");
-			Ip2.result.CountryCode.Should().Be("UK");
+			Ip2.Error.Should().BeNull();
+			Ip2.Result.Should().NotBeNull();
+			Ip2.Result.Country.Should().Be("United Kingdom");
+			Ip2.Result.CountryCode.Should().Be("UK");
 
 			// 2001:4860:4860:0000:0000:0000:0000:8888
 			var Ip3 = response["2001:4860:4860::8888"];
-			Ip3.error.Should().BeNull();
-			Ip3.result.Should().NotBeNull();
-			Ip3.result.Country.Should().Be("United States");
-			Ip3.result.CountryCode.Should().Be("US");	
+			Ip3.Error.Should().BeNull();
+			Ip3.Result.Should().NotBeNull();
+			Ip3.Result.Country.Should().Be("United States");
+			Ip3.Result.CountryCode.Should().Be("US");	
 		}
 
 		[Fact]
@@ -258,7 +260,7 @@ namespace IPLocateTests
 			_server.Given(
 				Request.Create()
 					.WithPath($"/api/batch")
-					.WithHeader("apikey", apiKey)
+					.WithHeader(HEADER_API_KEY, apiKey)
 					.UsingPost()
 					.WithBodyAsJson(ipList)
 			)
@@ -278,17 +280,17 @@ namespace IPLocateTests
 			// invalid-ip
 			var Ip1 = response["invalid-ip"];
 			Ip1.Should().NotBeNull();
-			Ip1.error.Should().NotBeNull();
-			Ip1.result.Should().BeNull();
-			Ip1.error.Error.Should().Be("invalid ip");
+			Ip1.Error.Should().NotBeNull();
+			Ip1.Result.Should().BeNull();
+			Ip1.Error.Error.Should().Be("invalid ip");
 
 			// 1.1.1.1
 			var Ip2 = response["1.1.1.1"];
 			Ip2.Should().NotBeNull();
-			Ip2.error.Should().BeNull();
-			Ip2.result.Should().NotBeNull();
-			Ip2.result.Country.Should().Be("United Kingdom");
-			Ip2.result.CountryCode.Should().Be("UK");
+			Ip2.Error.Should().BeNull();
+			Ip2.Result.Should().NotBeNull();
+			Ip2.Result.Country.Should().Be("United Kingdom");
+			Ip2.Result.CountryCode.Should().Be("UK");
 		}
 
 		[Fact]
@@ -319,7 +321,7 @@ namespace IPLocateTests
 				Request.Create()
 					.WithPath($"/api/lookup/{ip}")
 					.WithParam("at", at)
-					.WithHeader("apikey", apiKey)
+					.WithHeader(HEADER_API_KEY, apiKey)
 					.UsingGet()
 			)
 			.RespondWith(
