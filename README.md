@@ -80,7 +80,7 @@ services.AddHttpClient<IPLocateClient>((sp, http) =>
 	http.BaseAddress = new Uri(opts.Value.BaseUrl);
 	http.DefaultRequestHeaders.Add("X-Api-Key", opts.Value.ApiKey);
 	http.DefaultRequestHeaders.Add("Accept", "application/json");
-	http.DefaultRequestHeaders.Add("User-Agent", "IPLocateClient/1.0.0");
+	http.DefaultRequestHeaders.Add("User-Agent", "IPLocateIO.Client/1.0.1");
 });
 ```
 
